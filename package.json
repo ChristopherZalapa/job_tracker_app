@@ -19,6 +19,7 @@
 	},
 	"homepage": "https://github.com/ChristopherZalapa/job_tracker_app#readme",
 	"dependencies": {
+		"@supabase/supabase-js": "^2.87.2",
 		"cors": "^2.8.5",
 		"dotenv": "^17.2.3",
 		"express": "^5.2.1",
