@@ -23,7 +23,10 @@ const authRoutes = createAuthRoutes(supabase);
 app.use("/auth", authRoutes);
 
 app.listen(PORT, () => {
+	console.log("\n" + "=".repeat(50));
 	console.log(`Now listening on ${PORT}`);
+	console.log("\n" + "=".repeat(50));
 	console.log(`Signup: POST http://localhost:${PORT}/auth/signup`);
 	console.log(`Login: POST http://localhost:${PORT}/auth/login`);
+	console.log("\n" + "=".repeat(50));
 });
