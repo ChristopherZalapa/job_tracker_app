@@ -8,15 +8,6 @@ export default function Login() {
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
-
-	const handleEmailChange = (e) => {
-		setEmail(e.target.value);
-	};
-
-	const handlePasswordChange = (e) => {
-		setPassword(e.target.value);
-	};
-
 	const navigate = useNavigate();
 
 	const handleSubmit = async (e) => {
@@ -32,98 +23,74 @@ export default function Login() {
 
 			console.log("Login successful!", response.data);
 
-			// Needed to keep user logged in!!!
-			localStorage.setItem("token", response.data.session.access_token);
+			// Save token to localStorage
+			localStorage.setItem("token", response.data.token);
+
+			// Save user to localStorage (optional)
 			localStorage.setItem("user", JSON.stringify(response.data.user));
 
-			navigate("/jobs/");
+			// Redirect to dashboard
+			navigate("/jobs");
 		} catch (err) {
-			const errorMessage =
-				err.response?.data?.error || "Login failed. Please try again.";
-			setError(errorMessage);
+			console.error("Login error:", err);
+			setError(err.response?.data?.error || "Login failed. Please try again.");
 		} finally {
 			setLoading(false);
 		}
 	};
 
+	if (loading) {
+		return <LoadingSpinner />;
+	}
+
 	return (
-		<div
-			className='min-h-screen flex items-center justify-center
-        bg-linear-to-br from-blue-50 to-indigo-100'
-		>
-			<div className='bg-white p-8 rounded-lg shadow-lg w-full max-w-md'>
-				<h2 className='text-3xl font-bold text-center text-gray-800 mb-6'>
-					Welcome Back
-				</h2>
+		<div className='min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4'>
+			<div className='bg-white rounded-2xl shadow-xl p-8 w-full max-w-md'>
+				<h1 className='text-3xl font-bold text-gray-800 mb-2'>Welcome Back</h1>
+
+				{error && <ErrorMessage message={error} />}
 
 				<form onSubmit={handleSubmit} className='space-y-4'>
 					<div>
-						<label
-							htmlFor='email'
-							className='block text-sm font-medium text-gray-700 mb-1'
-						>
+						<label className='block text-sm font-medium text-gray-700 mb-2'>
 							Email
 						</label>
 						<input
 							type='email'
-							id='email'
 							value={email}
-							onChange={handleEmailChange}
+							onChange={(e) => setEmail(e.target.value)}
 							required
-							className='w-full px-4 py-2 border border-gray-300
-                            rounded-lg focus:ring-2 focus:ring-indigo-300
-                            focus:border-transparent outline-none transition'
-							placeholder='you@example.com'
+							className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent'
 						/>
 					</div>
 
 					<div>
-						<label
-							htmlFor='password'
-							className='block text-sm font-medium text-gray-700 mb-1'
-						>
+						<label className='block text-sm font-medium text-gray-700 mb-2'>
 							Password
 						</label>
 						<input
 							type='password'
-							id='password'
 							value={password}
-							onChange={handlePasswordChange}
+							onChange={(e) => setPassword(e.target.value)}
 							required
-							className='w-full px-4 py-2 border border-gray-300
-                            rounded-lg focus:ring-2 focus:ring-indigo-300
-                            focus:border-transparent outline-none transition'
-							placeholder='••••••••'
+							className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent'
 						/>
 					</div>
-
-					{error && (
-						<div
-							className='bg-red-50 border border-red-200 text-red-700
-                            px-4 py-3 rounded-lg'
-						>
-							{error}
-						</div>
-					)}
 
 					<button
 						type='submit'
 						disabled={loading}
-						className='w-full bg-indigo-400 text-white py-2 px-4
-                        rounded-lg font-medium hover:bg-indigo-500
-                        focus:ring-4 focus:ring-indigo-200 transition
-                        disabled:opacity-50 disabled:cursor-not-allowed'
+						className='w-full bg-indigo-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-200 transition disabled:opacity-50 disabled:cursor-not-allowed'
 					>
-						{loading ? "Logging In..." : "Login"}
+						{loading ? "Logging in..." : "Login"}
 					</button>
 				</form>
 
-				<p className='text-center text-gray-600 mt-6'>
+				<p className='mt-6 text-center text-gray-600'>
 					Don't have an account?{" "}
 					<Link
 						to='/signup'
-						href='#'
-						className='text-blue-600 hover:text-blue-700 font-medium'
+						className='text-indigo-600 hover:text-indigo-700 font-medium'
 					>
 						Sign Up
 					</Link>
